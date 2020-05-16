@@ -11,6 +11,9 @@ TYPES_OF_DEATH = ['MOD_UNKNOWN', 'MOD_SHOTGUN', 'MOD_GAUNTLET', 'MOD_MACHINEGUN'
 ]
 
 class LogFileProcessor:
+    """
+    Log Parser Class.
+    """
     def __init__(self):
         self.file_name = 'games.log'
         self.game = 0
@@ -18,6 +21,11 @@ class LogFileProcessor:
         self.response = {}
 
     def start(self):
+        """
+        Distribution method and calling specific parse methods.
+
+        Returns dict.
+        """
         log = open(self.file_name,"r")
         for line in log:
             if 'InitGame' in line:
@@ -30,6 +38,12 @@ class LogFileProcessor:
         return self.response
 
     def create_game(self):
+        """
+        Method that creates response dict for each
+        game within the global response dict.
+
+        Returns None
+        """
         self.game += 1
         self.response[f'game_{self.game}'] = {
             'total_kills': 0,
@@ -40,6 +54,12 @@ class LogFileProcessor:
         }
 
     def register_player(self, line):
+        """
+        Parser method that takes a line from the log file and
+        adds players to the game dict.
+
+        Returns dict
+        """
         id = int(re.findall("( [0-9] )", line)[0].strip())
         name = line.split("\\")[1]
         self.player_keys[id] = name
@@ -47,6 +67,12 @@ class LogFileProcessor:
         self.response[f'game_{self.game}']['players'] = sorted(set(self.response[f'game_{self.game}']['players']))
 
     def register_kill(self, line):
+        """
+        Parser method that takes a line from the log file and adds in the
+        game dict, killer, dead and death type.
+
+        Returns None
+        """
         kill = re.findall("([0-9][0-9]* [0-9]* [0-9][0-9]*)", line)[0].strip().split(' ')
         murderer = self.player_keys[int(kill[0])] if kill[0] != '1022' else '<world>'
         dead = self.player_keys[int(kill[1])]
