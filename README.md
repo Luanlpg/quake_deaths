@@ -10,7 +10,7 @@
 
 - Faça a instalação do `requirements.txt` usando o comando: `pip install -r requirements.txt`
 
-## Rodando o Script de rancking
+## Rodando o Script de ranking
 
 - Rode: `python processing`
 
